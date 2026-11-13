@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>STATICS REVIEWER | 100-ITEM MULTIPLE-CHOICE QUIZ</title>
+<style>
+  :root {
+    --bg: #f0ebf8;
+    --card-bg: #ffffff;
+    --accent: #673ab7;
+    --accent-dark: #4527a0;
+    --accent-light: #ede7f6;
+    --text: #202124;
+    --muted: #5f6368;
+    --border: #dadce0;
+    --correct-bg: #e6f4ea;
+    --correct-border: #1e8e3e;
+    --wrong-bg: #fce8e6;
+    --wrong-border: #d93025;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 20px 12px 60px;
+    background: var(--bg);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .header-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-top: 10px solid var(--accent);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .header-card h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 500;
+  }
+  .header-card p {
+    margin: 4px 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .meta-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .meta-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 2px;
+    font-size: 15px;
+    outline: none;
+    background: transparent;
+  }
+  .meta-field input:focus {
+    border-bottom: 2px solid var(--accent);
+  }
+  .toolbar {
+    position: sticky;
+    top: 10px;
+    z-index: 50;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .progress-info {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .score-badge {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .section-banner {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+    padding: 14px 24px;
+    margin-top: 24px;
+  }
+  .section-banner h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .section-desc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 14px 24px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .q-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
+  }
+  .q-card.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong-border);
+  }
+  .q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .q-text {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+  }
+  .q-pts {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .opt-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 15px;
+    transition: background 0.15s;
+  }
+  .opt-label:hover {
+    background: #f8f9fa;
+  }
+  .opt-label input[type="radio"] {
+    accent-color: var(--accent);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+  }
+  .opt-label.correct-choice {
+    background: #ceead6;
+    border-color: var(--correct-border);
+    font-weight: 500;
+  }
+  .opt-label.wrong-choice {
+    background: #fad2cf;
+    border-color: var(--wrong-border);
+  }
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    font-size: 13.5px;
+    color: #202124;
+  }
+  .q-card.submitted .feedback {
+    display: block;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  button {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 24px;
+    border-radius: 4px;
+    border: none;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .btn-primary:hover {
+    background: var(--accent-dark);
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--accent-light);
+  }
+  .result-banner {
+    display: none;
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .result-banner h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: var(--accent-dark);
+  }
+  @media (max-width: 600px) {
+    .meta-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header-card">
+    <h1>STATICS REVIEWER | 100-ITEM MULTIPLE-CHOICE QUIZ</h1>
+    <p><strong>Based on the two uploaded lessons:</strong> The Birth of Centroid and The Birth of the Moment of Inertia.</p>
+    <p><strong>Instructions:</strong> Choose the single best answer (A–D). Section A has 50 questions and Section B has 50. An answer key and short explanations follow the questions.</p>
+    <div class="meta-grid">
+      <div class="meta-field">
+        <label for="studentName">Name</label>
+        <input type="text" id="studentName" placeholder="Your answer" />
+      </div>
+      <div class="meta-field">
+        <label for="quizDate">Date</label>
+        <input type="date" id="quizDate" />
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="progress-info" id="progressText">Answered: 0 / 100</div>
+    <div class="score-badge" id="scoreBadge">Score: — / 100</div>
+  </div>
+
+  <div class="section-banner">
+    <h2>SECTION A — THE BIRTH OF CENTROID</h2>
+  </div>
+  <div class="section-desc">
+    <strong>Coverage:</strong> history, lever principle, Pappus-Guldin theorem, area centroids, vertical strips, integration, and basic numerical applications.
+  </div>
+  <div id="sectionA-container"></div>
+
+  <div class="section-banner">
+    <h2>SECTION B — THE BIRTH OF THE MOMENT OF INERTIA</h2>
+  </div>
+  <div class="section-desc">
+    <strong>Coverage:</strong> Huygens and Euler, rotational resistance, mass distribution, basic formulas, standard shapes, integration, parallel-axis theorem, and numerical applications.
+  </div>
+  <div id="sectionB-container"></div>
+
+  <div class="result-banner" id="resultBanner">
+    <h3 id="finalScoreTitle">Score: 0 / 100</h3>
+    <p id="finalScoreBreakdown"></p>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-primary" onclick="submitQuiz()">Submit</button>
+    <button type="button" class="btn-secondary" onclick="resetQuiz()">Clear form &amp; Retake</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = {"sectionA": [{"q": "1. Which ancient scholar is identified with the earliest geometric foundation of the centroid?", "opts": ["A. Newton", "B. Galileo", "C. Euler", "D. Archimedes"], "ans": 3, "exp": "D — Archimedes studied balancing geometric figures in ancient Greece."}, {"q": "2. Around what date does the document place Archimedes’ work on the centroid?", "opts": ["A. 1765 CE", "B. 1687 CE", "C. 250 BCE", "D. 1565 CE"], "ans": 2, "exp": "C — The earliest phase is dated about 250 BCE."}, {"q": "3. What principle did Archimedes use to study balance?", "opts": ["A. Law of the Lever", "B. Parallel Axis Theorem", "C. Newton’s Second Law", "D. Bernoulli’s Principle"], "ans": 0, "exp": "A — The law of the lever relates weights to their distances from a fulcrum."}, {"q": "4. In the law of the lever, two weights balance when their moments about the fulcrum are…", "opts": ["A. Both zero individually", "B. Equal in magnitude and opposite in direction", "C. Equal to the area of the lever", "D. Proportional to their speeds"], "ans": 1, "exp": "B — Balanced torques cancel around the fulcrum."}, {"q": "5. In a triangle, where is the centroid located?", "opts": ["A. At the intersection of the medians", "B. At the intersection of all altitudes", "C. At the intersection of angle bisectors in every case", "D. At the midpoint of its longest side"], "ans": 0, "exp": "A — The triangle centroid is the intersection of its three medians."}, {"q": "6. A triangle’s centroid lies how far from its base along a median?", "opts": ["A. One-third of the altitude", "B. One-half of the altitude", "C. One-quarter of the altitude", "D. Two-thirds of the altitude"], "ans": 0, "exp": "A — Measured from the base along a median, it is at one-third the altitude."}, {"q": "7. Which work of Archimedes investigated the balance points of plane figures?", "opts": ["A. Horologium Oscillatorium", "B. Theoria motus corporum solidorum", "C. On the Equilibrium of Planes", "D. Principia Mathematica"], "ans": 2, "exp": "C — On the Equilibrium of Planes treats geometric figures as weight-bearing shapes."}, {"q": "8. Which mathematician extended centroid methods to three-dimensional solids in 1565?", "opts": ["A. Federico Commandino", "B. Pappus of Alexandria", "C. Pierre Varignon", "D. Luca Valerio"], "ans": 0, "exp": "A — Commandino extended earlier 2D ideas to cones, pyramids, and other solids."}, {"q": "9. Which publication is associated with Commandino?", "opts": ["A. On the Equilibrium of Planes", "B. Liber de centro gravitatis solidorum", "C. Horologium Oscillatorium", "D. Theoria motus corporum solidorum"], "ans": 1, "exp": "B — This 1565 book concerns centers of gravity of solids."}, {"q": "10. Which mathematician used geometric exhaustion methods around 1604?", "opts": ["A. Johannes Segner", "B. Leonhard Euler", "C. Christiaan Huygens", "D. Luca Valerio"], "ans": 3, "exp": "D — Valerio advanced center-of-gravity theory through geometric exhaustion."}, {"q": "11. What contribution is associated with Pierre Varignon?", "opts": ["A. The compound pendulum", "B. The theorem of moments", "C. The principal axes of rotation", "D. The first pendulum clock"], "ans": 1, "exp": "B — Varignon related the moment of a resultant to the sum of its component moments."}, {"q": "12. According to Varignon’s theorem, the moment of a resultant equals…", "opts": ["A. The perimeter multiplied by area", "B. The product of total mass and time", "C. The sum of the forces without distances", "D. The sum of the moments of component forces"], "ans": 3, "exp": "D — A resultant force has the same total moment as its contributing forces."}, {"q": "13. Which two mathematicians are named for developing calculus in the document?", "opts": ["A. Newton and Leibniz", "B. Galileo and Valerio", "C. Archimedes and Pappus", "D. Huygens and Segner"], "ans": 0, "exp": "A — Calculus supplied integration to compute centroids of general shapes."}, {"q": "14. Why did calculus become important for centroid calculations?", "opts": ["A. It eliminated the need for coordinates", "B. It only worked for triangular shapes", "C. It allowed continuous sums over irregular shapes", "D. It made every centroid equal to the origin"], "ans": 2, "exp": "C — Integration adds the moments of infinitesimal parts."}, {"q": "15. Which mathematician later linked the centroid framework to rigid-body motion?", "opts": ["A. Federico Commandino", "B. Paul Guldin", "C. Leonhard Euler", "D. Luca Valerio"], "ans": 2, "exp": "C — Euler and later mechanics scholars incorporated centroids into rigid-body analysis."}, {"q": "16. Pappus’s centroid theorem is also known as…", "opts": ["A. Segner theorem", "B. Pappus-Guldin theorem", "C. Steiner-Cauchy law", "D. Pascal theorem"], "ans": 1, "exp": "B — The document notes its rediscovery by Paul Guldin."}, {"q": "17. Who was the ancient mathematician associated with Pappus’s theorem?", "opts": ["A. Pierre Varignon", "B. Pappus of Alexandria", "C. Archimedes of Syracuse", "D. Christiaan Huygens"], "ans": 1, "exp": "B — Pappus was an ancient Greek mathematician associated with the theorem."}, {"q": "18. Who rediscovered the theorem in the 17th century?", "opts": ["A. Federico Commandino", "B. Paul Guldin", "C. Isaac Newton", "D. Luca Valerio"], "ans": 1, "exp": "B — Swiss mathematician Paul Guldin is named as a later rediscoverer."}, {"q": "19. Pappus’s first theorem is used to find…", "opts": ["A. Mass moment of inertia", "B. Angular velocity", "C. Area of a triangle", "D. Surface area of revolution"], "ans": 3, "exp": "D — The first theorem relates generating-curve length to swept surface area."}, {"q": "20. Pappus’s second theorem is used to find…", "opts": ["A. Volume of revolution", "B. Force of friction", "C. Slope of a tangent", "D. Surface curvature"], "ans": 0, "exp": "A — The second theorem uses generating-region area to find swept volume."}, {"q": "21. For Pappus’s surface-area theorem, the generating quantity is…", "opts": ["A. Area of a region", "B. Volume of a solid", "C. Mass of a solid", "D. Length of a curve"], "ans": 3, "exp": "D — Surface area is curve length times its centroid’s travel distance."}, {"q": "22. For Pappus’s volume theorem, the generating quantity is…", "opts": ["A. Perimeter of a sphere", "B. Moment of inertia", "C. Area of a plane region", "D. Length of a line"], "ans": 2, "exp": "C — Volume is plane-region area times centroid travel distance."}, {"q": "23. A centroid at distance R from an external axis travels how far in one revolution?", "opts": ["A. 2πR", "B. πR²", "C. R/2", "D. 4πR²"], "ans": 0, "exp": "A — The centroid traces a circle of circumference 2πR."}, {"q": "24. Which shape is produced by rotating a circular region about an external coplanar axis?", "opts": ["A. Torus", "B. Cone", "C. Tetrahedron", "D. Cube"], "ans": 0, "exp": "A — A circular region rotating around a separate external axis produces a torus."}, {"q": "25. For a homogeneous flat plate, centroid location depends primarily on…", "opts": ["A. Its color", "B. Its temperature alone", "C. Its geometry", "D. Its label"], "ans": 2, "exp": "C — Uniform density makes mass proportional to geometric area."}, {"q": "26. What is the basic formula for the x-coordinate of the area centroid?", "opts": ["A. x̄ = ∫ dA / ∫ x² dA", "B. x̄ = A / (∫ x dA)", "C. x̄ = (∫ x dA) / A", "D. x̄ = A ∫ x dA"], "ans": 2, "exp": "C — The first moment of area about y divided by total area gives x̄."}, {"q": "27. What is the basic formula for the y-coordinate of the area centroid?", "opts": ["A. ȳ = A / ∫ y dA", "B. ȳ = (∫ y dA) / A", "C. ȳ = (∫ x dA) / A", "D. ȳ = ∫ y² dA"], "ans": 1, "exp": "B — The first moment of area about x divided by area gives ȳ."}, {"q": "28. What does dA represent in a centroid integral?", "opts": ["A. An infinitesimal time interval", "B. A small mass divided by acceleration", "C. An infinitesimal area element", "D. A complete volume"], "ans": 2, "exp": "C — A continuous region is divided into very small area pieces."}, {"q": "29. For a region under y=f(x) above the x-axis, a vertical strip has area…", "opts": ["A. dA = dx/f(x)", "B. dA = f(x)² dx", "C. dA = f(x) dx", "D. dA = x f(x) dx"], "ans": 2, "exp": "C — The strip height is f(x) and its width is dx."}, {"q": "30. For that same vertical strip, its horizontal moment about the y-axis is…", "opts": ["A. x² dx", "B. f(x) dx", "C. ½f(x)² dx", "D. x f(x) dx"], "ans": 3, "exp": "D — Multiply strip area by horizontal distance x."}, {"q": "31. Where is the local y-coordinate of a vertical strip from y=0 to y=f(x)?", "opts": ["A. 2f(x)", "B. f(x)", "C. x/2", "D. f(x)/2"], "ans": 3, "exp": "D — The centroid of a rectangle lies halfway up its height."}, {"q": "32. For a region under a nonnegative curve y=f(x), the numerator for ȳ is…", "opts": ["A. ∫ f(x) dx", "B. ½ ∫ [f(x)]² dx", "C. ∫ x² dx", "D. ∫ x f(x) dx"], "ans": 1, "exp": "B — Multiplying strip area f(x)dx by midpoint f(x)/2 gives ½f(x)²dx."}, {"q": "33. When a region lies between upper u(x) and lower l(x), its vertical strip height is…", "opts": ["A. u(x) − l(x)", "B. u(x) + l(x)", "C. u(x)l(x)", "D. u(x)/l(x)"], "ans": 0, "exp": "A — The vertical distance between top and bottom curves is their difference."}, {"q": "34. For a region between two curves, the strip’s local vertical centroid is…", "opts": ["A. u(x) − l(x)", "B. [u(x) − l(x)]/2", "C. u(x)l(x)", "D. [u(x)+l(x)]/2"], "ans": 3, "exp": "D — A rectangle’s midpoint is the average of its top and bottom ordinates."}, {"q": "35. For a region between upper u(x) and lower l(x), the first moment about x is…", "opts": ["A. ∫ x[u(x) − l(x)] dx", "B. ½ ∫ [u(x)² − l(x)²] dx", "C. ½ ∫ [u(x) − l(x)]² dx", "D. ∫ [u(x)+l(x)] dx"], "ans": 1, "exp": "B — The strip’s average height multiplied by its area yields a difference of squares."}, {"q": "36. The total area between upper u(x) and lower l(x), over a ≤ x ≤ b, is…", "opts": ["A. ∫ₐᵇ x[u(x) − l(x)] dx", "B. ∫ₐᵇ [u(x) − l(x)] dx", "C. ∫ₐᵇ [u(x)+l(x)] dx", "D. ∫ₐᵇ [u(x)² − l(x)²] dx"], "ans": 1, "exp": "B — Area is the integral of the vertical strip heights."}, {"q": "37. A rectangle extends from x=0 to x=8 and y=0 to y=4. What is its centroid?", "opts": ["A. (4, 2)", "B. (2, 4)", "C. (4, 4)", "D. (8, 4)"], "ans": 0, "exp": "A — The centroid lies halfway along both dimensions."}, {"q": "38. A right triangle with vertices (0,0), (6,0), and (0,9) has centroid…", "opts": ["A. (2, 3)", "B. (4, 6)", "C. (3, 4.5)", "D. (6, 9)"], "ans": 0, "exp": "A — Average the vertex coordinates: (6/3, 9/3)."}, {"q": "39. A right triangle has base 12 and height 6 along positive axes from the origin. Its centroid is…", "opts": ["A. (3, 4)", "B. (8, 4)", "C. (6, 3)", "D. (4, 2)"], "ans": 3, "exp": "D — The centroid is one-third of each leg from the right-angle vertex."}, {"q": "40. The area under y=2x from x=0 to x=3 is…", "opts": ["A. 12 square units", "B. 9 square units", "C. 6 square units", "D. 18 square units"], "ans": 1, "exp": "B — A = ∫₀³ 2x dx = [x²]₀³ = 9."}, {"q": "41. For the triangle under y=2x from x=0 to x=3, the x-coordinate of its centroid is…", "opts": ["A. 1", "B. 3", "C. 2", "D. 1.5"], "ans": 2, "exp": "C — x̄ = (∫₀³ 2x² dx)/9 = 18/9 = 2."}, {"q": "42. For the triangle under y=2x from x=0 to x=3, the y-coordinate of its centroid is…", "opts": ["A. 3", "B. 1", "C. 2", "D. 4"], "ans": 2, "exp": "C — ȳ = (½ ∫₀³ (2x)² dx)/9 = 18/9 = 2."}, {"q": "43. The area of a semicircle of radius 2 above the x-axis is…", "opts": ["A. π", "B. 2π", "C. 4π", "D. 8π"], "ans": 1, "exp": "B — Half of πr² with r=2 is 2π."}, {"q": "44. The centroid of a uniform square of side 10 measured from its lower-left corner is…", "opts": ["A. (2.5, 2.5)", "B. (0, 0)", "C. (5, 5)", "D. (10, 10)"], "ans": 2, "exp": "C — Symmetry puts the centroid at the square’s geometric center."}, {"q": "45. Compute ∫₀² 3x² dx.", "opts": ["A. 12", "B. 24", "C. 6", "D. 8"], "ans": 3, "exp": "D — The antiderivative is x³; evaluate 2³ − 0³ = 8."}, {"q": "46. Compute ∫₀³ 2x dx.", "opts": ["A. 6", "B. 18", "C. 3", "D. 9"], "ans": 3, "exp": "D — The antiderivative is x², giving 9."}, {"q": "47. The area under y=4 on 0 ≤ x ≤ 5 is…", "opts": ["A. 9", "B. 25", "C. 20", "D. 10"], "ans": 2, "exp": "C — A = ∫₀⁵ 4 dx = 4(5) = 20."}, {"q": "48. For the rectangle under y=4 over 0 ≤ x ≤ 5, the centroid is…", "opts": ["A. (5, 4)", "B. (2.5, 2)", "C. (4, 5)", "D. (2, 2.5)"], "ans": 1, "exp": "B — The horizontal and vertical midpoints are 2.5 and 2."}, {"q": "49. A plane region of area 12 has first moment about the y-axis Qᵧ=36. What is x̄?", "opts": ["A. 3", "B. 4", "C. 48", "D. 2"], "ans": 0, "exp": "A — x̄ = Qᵧ/A = 36/12 = 3."}, {"q": "50. A generating curve of length 5 has its centroid 3 units from an external axis. Pappus’s surface area is…", "opts": ["A. 15π square units", "B. 60π square units", "C. 45π square units", "D. 30π square units"], "ans": 3, "exp": "D — S = L(2πR) = 5(2π·3) = 30π."}], "sectionB": [{"q": "1. Which scientist is credited with the conceptual discovery of rotational inertia in the document?", "opts": ["A. Christiaan Huygens", "B. Isaac Newton", "C. Federico Commandino", "D. Pierre Varignon"], "ans": 0, "exp": "A — Huygens studied compound pendulums in his clockmaking research."}, {"q": "2. What year is linked to Huygens’s landmark treatise?", "opts": ["A. 1565", "B. 1673", "C. 1765", "D. 1755"], "ans": 1, "exp": "B — Horologium Oscillatorium appeared in 1673."}, {"q": "3. What practical challenge motivated Huygens’s studies?", "opts": ["A. Improving pendulum clocks", "B. Calculating bridge centroids", "C. Measuring ocean tides", "D. Designing steam turbines"], "ans": 0, "exp": "A — Huygens sought more accurate pendulum clocks."}, {"q": "4. What is the title of Huygens’s 1673 treatise?", "opts": ["A. Theoria motus corporum solidorum", "B. Liber de centro gravitatis solidorum", "C. Horologium Oscillatorium", "D. On the Equilibrium of Planes"], "ans": 2, "exp": "C — The cited work analyzes oscillating clocks and pendulums."}, {"q": "5. Which type of pendulum was central to Huygens’s insight?", "opts": ["A. Conical pendulum only", "B. Simple massless-string pendulum only", "C. Spring-mass oscillator only", "D. Compound pendulum"], "ans": 3, "exp": "D — Physical, extended pendulums have distributed mass."}, {"q": "6. Why did a compound pendulum require a new treatment?", "opts": ["A. It never accelerates angularly", "B. Its mass is distributed over an extended body", "C. It has no mass", "D. Its pivot must be at its center"], "ans": 1, "exp": "B — Resistance to swinging depends on where the body’s mass lies."}, {"q": "7. Who is identified with the formal naming of moment of inertia?", "opts": ["A. Luca Valerio", "B. Leonhard Euler", "C. Galileo Galilei", "D. Pappus of Alexandria"], "ans": 1, "exp": "B — Euler introduced the term momentum inertiae in the document’s account."}, {"q": "8. What year is associated with Euler’s formal naming?", "opts": ["A. 1604", "B. 1673", "C. 1687", "D. 1765"], "ans": 3, "exp": "D — Euler’s rigid-body treatise was published in 1765."}, {"q": "9. What Latin term is attributed to Euler?", "opts": ["A. centrum gravitatis", "B. momentum inertiae", "C. motus perpetuus", "D. vis viva"], "ans": 1, "exp": "B — The Latin phrase translates to moment of inertia."}, {"q": "10. Which treatise is associated with Euler’s 1765 work?", "opts": ["A. Horologium Oscillatorium", "B. On the Equilibrium of Planes", "C. Theoria motus corporum solidorum seu rigidorum", "D. Liber de centro gravitatis solidorum"], "ans": 2, "exp": "C — The title concerns motion of solid or rigid bodies."}, {"q": "11. Which mathematician investigated principal axes around 1755?", "opts": ["A. Christiaan Huygens", "B. Archimedes", "C. Johannes Andreas Segner", "D. Paul Guldin"], "ans": 2, "exp": "C — Segner’s principal-axes work helped develop rigid-body rotational theory."}, {"q": "12. Which chronological order matches the document?", "opts": ["A. Segner → Huygens → Euler", "B. Euler → Segner → Huygens", "C. Huygens → Segner → Euler", "D. Huygens → Euler → Segner"], "ans": 2, "exp": "C — The timeline gives 1673, around 1755, and 1765."}, {"q": "13. Moment of inertia characterizes resistance to…", "opts": ["A. Linear position", "B. Electric current", "C. Temperature change", "D. Angular acceleration"], "ans": 3, "exp": "D — It is the rotational analogue of mass in translational motion."}, {"q": "14. The rotational analogue of Newton’s F=ma is…", "opts": ["A. F=Iα", "B. τ=mv", "C. τ=Iα", "D. I=τα"], "ans": 2, "exp": "C — Torque is proportional to moment of inertia times angular acceleration."}, {"q": "15. In τ=Iα, τ denotes…", "opts": ["A. Torque", "B. Density", "C. Kinetic energy", "D. Angular velocity"], "ans": 0, "exp": "A — Torque is the rotational driving effect."}, {"q": "16. In τ=Iα, α denotes…", "opts": ["A. Linear acceleration", "B. Angular acceleration", "C. Angular momentum", "D. Area"], "ans": 1, "exp": "B — Alpha is angular acceleration in this relation."}, {"q": "17. For point masses, which equation gives mass moment of inertia about an axis?", "opts": ["A. I=Σmr", "B. I=Σm/r", "C. I=Σm²r", "D. I=Σmr²"], "ans": 3, "exp": "D — Each particle contributes its mass times its squared perpendicular distance."}, {"q": "18. For a continuous body, moment of inertia is expressed as…", "opts": ["A. I=∫ r dm", "B. I=∫ r² dm", "C. I=∫ r² dA without density", "D. I=∫ dm/r"], "ans": 1, "exp": "B — Integration sums the r²dm contributions over all mass."}, {"q": "19. What does r represent in I=∫ r²dm?", "opts": ["A. Perpendicular distance to the rotation axis", "B. Total diameter of the object", "C. Distance traveled in one second", "D. Radius of curvature of a path only"], "ans": 0, "exp": "A — Each mass element has a perpendicular distance from the chosen axis."}, {"q": "20. If the mass of a point particle doubles while its distance from the axis stays fixed, I…", "opts": ["A. Quadruples", "B. Stays constant", "C. Halves", "D. Doubles"], "ans": 3, "exp": "D — For one point mass, I=mr² is directly proportional to m."}, {"q": "21. If the distance of a point mass from the axis doubles while mass stays fixed, I…", "opts": ["A. Increases eightfold", "B. Quadruples", "C. Halves", "D. Doubles"], "ans": 1, "exp": "B — The distance enters squared: (2r)²=4r²."}, {"q": "22. Which SI unit is used for mass moment of inertia?", "opts": ["A. kg·m/s", "B. kg·m²", "C. N·m", "D. kg/m²"], "ans": 1, "exp": "B — The formula mass × distance squared yields kg·m²."}, {"q": "23. The moment of inertia depends on the choice of…", "opts": ["A. Color of the material", "B. Axis of rotation", "C. Time of day", "D. Unit of temperature"], "ans": 1, "exp": "B — Changing the axis changes each mass element’s distance r."}, {"q": "24. For a thin hoop of mass M and radius R about its central symmetry axis, I is…", "opts": ["A. ½MR²", "B. MR²", "C. (1/12)MR²", "D. (2/5)MR²"], "ans": 1, "exp": "B — Every mass element lies at distance R, so I=R²∫dm=MR²."}, {"q": "25. For a solid disk of mass M and radius R about its central axis, I is…", "opts": ["A. ½MR²", "B. MR²", "C. (1/3)MR²", "D. (2/5)MR²"], "ans": 0, "exp": "A — A uniform disk is modeled by concentric rings and integrates to ½MR²."}, {"q": "26. For a solid sphere of mass M and radius R about a diameter, I is…", "opts": ["A. ½MR²", "B. (2/5)MR²", "C. MR²", "D. (1/12)MR²"], "ans": 1, "exp": "B — The uniform solid sphere’s diameter-axis moment of inertia is (2/5)MR²."}, {"q": "27. For a uniform slender rod of length L about its midpoint, perpendicular to the rod, I is…", "opts": ["A. (1/3)ML²", "B. (1/12)ML²", "C. ML²", "D. ½ML²"], "ans": 1, "exp": "B — The symmetric integral from −L/2 to L/2 gives ML²/12."}, {"q": "28. For a uniform slender rod about one end, perpendicular to the rod, I is…", "opts": ["A. ML²", "B. ½ML²", "C. (1/3)ML²", "D. (1/12)ML²"], "ans": 2, "exp": "C — Integrating from zero to L, or shifting axes, gives ML²/3."}, {"q": "29. Which relation is the parallel axis theorem for a mass moment of inertia?", "opts": ["A. I=I_cm/Md²", "B. I=I_cm+Md²", "C. I=I_cm+M/d²", "D. I=I_cm−Md²"], "ans": 1, "exp": "B — Moving to a parallel axis separated by d adds Md²."}, {"q": "30. In the parallel axis theorem, d is…", "opts": ["A. Distance between the two parallel axes", "B. Diameter of the solid", "C. Distance traveled per second", "D. Density of the material"], "ans": 0, "exp": "A — The new axis is displaced by d from the centroidal axis."}, {"q": "31. How can a solid disk be decomposed to derive its moment of inertia?", "opts": ["A. Into unrelated point masses at one radius", "B. Into two equal point masses", "C. Into squares of zero thickness only", "D. Into concentric thin rings"], "ans": 3, "exp": "D — The document uses nested circular rings with varying radii."}, {"q": "32. For a thin ring of radius r and thickness dr, its differential area is…", "opts": ["A. dA=2πr dr", "B. dA=2πdr", "C. dA=πdr²", "D. dA=πr² dr"], "ans": 0, "exp": "A — Ring area is circumference (2πr) times thickness dr."}, {"q": "33. For a uniform disk of mass M and radius R, its surface mass density is…", "opts": ["A. πR²/M", "B. M/(πR²)", "C. M/(4πR²)", "D. M/(2πR)"], "ans": 1, "exp": "B — A uniform disk’s mass per area equals total mass divided by disk area."}, {"q": "34. For a uniform slender rod, its linear mass density is…", "opts": ["A. M/L²", "B. ML", "C. M/L", "D. L/M"], "ans": 2, "exp": "C — A uniform rod distributes mass M over length L."}, {"q": "35. In a slender-rod integral along x, which differential mass element is used?", "opts": ["A. dm=(M/L²)dx", "B. dm=(M/L)dx", "C. dm=L dx", "D. dm=Mx dx"], "ans": 1, "exp": "B — The mass of a short segment equals linear density times dx."}, {"q": "36. A solid sphere can be subdivided for integration into…", "opts": ["A. Two point masses", "B. Thin straight rods only", "C. Thin circular disks", "D. Equal-size cubes only"], "ans": 2, "exp": "C — The document describes a stack of disk slices along the axis."}, {"q": "37. For a uniform solid sphere, the volume density is…", "opts": ["A. 3M/(4πR³)", "B. M/(2πR)", "C. M/(πR²)", "D. 4πR³/(3M)"], "ans": 0, "exp": "A — Divide mass by sphere volume 4πR³/3."}, {"q": "38. A thin hoop and a solid disk have the same M and R. Which has greater I about the central axis?", "opts": ["A. Thin hoop", "B. Solid disk", "C. Cannot compare if M and R are known", "D. They have equal I"], "ans": 0, "exp": "A — Hoop: MR²; disk: ½MR². More mass lies farther from the axis in the hoop."}, {"q": "39. For fixed torque, a larger moment of inertia produces…", "opts": ["A. Exactly the same angular acceleration", "B. Greater angular acceleration", "C. No angular acceleration under any conditions", "D. Smaller angular acceleration"], "ans": 3, "exp": "D — Rearranging τ=Iα gives α=τ/I."}, {"q": "40. What moment of inertia does a 3 kg point mass have at r=2 m?", "opts": ["A. 24 kg·m²", "B. 12 kg·m²", "C. 18 kg·m²", "D. 6 kg·m²"], "ans": 1, "exp": "B — I=mr²=3(2²)=12 kg·m²."}, {"q": "41. Two point masses, 2 kg at 1 m and 3 kg at 2 m, have total I of…", "opts": ["A. 20 kg·m²", "B. 14 kg·m²", "C. 8 kg·m²", "D. 10 kg·m²"], "ans": 1, "exp": "B — I=2(1²)+3(2²)=2+12=14 kg·m²."}, {"q": "42. A thin hoop has M=5 kg and R=2 m. Its central moment of inertia is…", "opts": ["A. 20 kg·m²", "B. 5 kg·m²", "C. 10 kg·m²", "D. 40 kg·m²"], "ans": 0, "exp": "A — I=MR²=5(2²)=20 kg·m²."}, {"q": "43. A solid disk has M=8 kg and R=0.5 m. Its central moment of inertia is…", "opts": ["A. 1 kg·m²", "B. 2 kg·m²", "C. 4 kg·m²", "D. 0.5 kg·m²"], "ans": 0, "exp": "A — I=½MR²=½(8)(0.5²)=1 kg·m²."}, {"q": "44. A solid sphere has M=10 kg and R=0.5 m. Its moment of inertia about a diameter is…", "opts": ["A. 4 kg·m²", "B. 2.5 kg·m²", "C. 0.5 kg·m²", "D. 1 kg·m²"], "ans": 3, "exp": "D — I=(2/5)MR²=(2/5)(10)(0.25)=1 kg·m²."}, {"q": "45. A slender rod has M=3 kg and L=2 m. Its centroidal transverse moment of inertia is…", "opts": ["A. 1 kg·m²", "B. 4 kg·m²", "C. 2 kg·m²", "D. 3 kg·m²"], "ans": 0, "exp": "A — I=(1/12)ML²=(1/12)(3)(4)=1 kg·m²."}, {"q": "46. A slender rod has M=3 kg and L=2 m. Its end-axis transverse moment of inertia is…", "opts": ["A. 4 kg·m²", "B. 6 kg·m²", "C. 1 kg·m²", "D. 2 kg·m²"], "ans": 0, "exp": "A — I=(1/3)ML²=(1/3)(3)(4)=4 kg·m²."}, {"q": "47. A body has I_cm=2 kg·m², M=4 kg, and a parallel axis 0.5 m away. What is I?", "opts": ["A. 2.5 kg·m²", "B. 4 kg·m²", "C. 3 kg·m²", "D. 6 kg·m²"], "ans": 2, "exp": "C — I=2+4(0.5²)=2+1=3 kg·m²."}, {"q": "48. A torque of 12 N·m acts on a body with I=4 kg·m². Its angular acceleration is…", "opts": ["A. 48 rad/s²", "B. 0.33 rad/s²", "C. 8 rad/s²", "D. 3 rad/s²"], "ans": 3, "exp": "D — α=τ/I=12/4=3 rad/s²."}, {"q": "49. A torque of 10 N·m causes angular acceleration 2 rad/s². What is the body’s moment of inertia?", "opts": ["A. 8 kg·m²", "B. 12 kg·m²", "C. 5 kg·m²", "D. 20 kg·m²"], "ans": 2, "exp": "C — I=τ/α=10/2=5 kg·m²."}, {"q": "50. Which statement best explains why mass distribution matters in rotational motion?", "opts": ["A. The axis location never affects rotational resistance", "B. Only total mass matters for rotation", "C. Mass farther from an axis contributes more because distance is squared", "D. Mass nearer the axis always contributes more"], "ans": 2, "exp": "C — Moment of inertia sums r²dm, weighting distant material strongly."}]};
+
+function renderSection(items, containerId, prefix) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  items.forEach((item, idx) => {
+    const qId = `${prefix}_${idx}`;
+    const card = document.createElement("div");
+    card.className = "q-card";
+    card.id = `card_${qId}`;
+
+    let optsHtml = "";
+    item.opts.forEach((optText, optIdx) => {
+      optsHtml += `
+        <label class="opt-label" id="lbl_${qId}_${optIdx}">
+          <input type="radio" name="${qId}" value="${optIdx}" onchange="updateProgress()" />
+          <span>${optText}</span>
+        </label>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="q-header">
+        <p class="q-text">${item.q}</p>
+        <span class="q-pts">1 point</span>
+      </div>
+      <div class="options">${optsHtml}</div>
+      <div class="feedback"><strong>Answer &amp; Explanation:</strong> ${item.exp}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateProgress() {
+  let answered = 0;
+  ["A", "B"].forEach(sec => {
+    for (let i = 0; i < 50; i++) {
+      if (document.querySelector(`input[name="${sec}_${i}"]:checked`)) answered++;
+    }
+  });
+  document.getElementById("progressText").textContent = `Answered: ${answered} / 100`;
+}
+
+function gradeSection(items, prefix) {
+  let score = 0;
+  items.forEach((item, idx) => {
+    const qId = `${prefix}_${idx}`;
+    const card = document.getElementById(`card_${qId}`);
+    const selected = document.querySelector(`input[name="${qId}"]:checked`);
+    card.classList.remove("correct", "wrong");
+    card.classList.add("submitted");
+
+    for (let i = 0; i < item.opts.length; i++) {
+      const lbl = document.getElementById(`lbl_${qId}_${i}`);
+      lbl.classList.remove("correct-choice", "wrong-choice");
+      if (i === item.ans) lbl.classList.add("correct-choice");
+    }
+
+    if (selected) {
+      const val = parseInt(selected.value, 10);
+      if (val === item.ans) {
+        score++;
+        card.classList.add("correct");
+      } else {
+        card.classList.add("wrong");
+        document.getElementById(`lbl_${qId}_${val}`).classList.add("wrong-choice");
+      }
+    } else {
+      card.classList.add("wrong");
+    }
+  });
+  return score;
+}
+
+function submitQuiz() {
+  const scoreA = gradeSection(QUIZ_DATA.sectionA, "A");
+  const scoreB = gradeSection(QUIZ_DATA.sectionB, "B");
+  const total = scoreA + scoreB;
+
+  document.getElementById("scoreBadge").textContent = `Score: ${total} / 100`;
+  const banner = document.getElementById("resultBanner");
+  banner.style.display = "block";
+  const nameVal = document.getElementById("studentName").value.trim();
+  const prefixName = nameVal ? `${nameVal} — ` : "";
+  document.getElementById("finalScoreTitle").textContent = `${prefixName}Total Score: ${total} / 100 (${total}%)`;
+  document.getElementById("finalScoreBreakdown").textContent = `Section A (The Birth of Centroid): ${scoreA} / 50  |  Section B (The Birth of the Moment of Inertia): ${scoreB} / 50`;
+  banner.scrollIntoView({ behavior: "smooth" });
+}
+
+function resetQuiz() {
+  renderSection(QUIZ_DATA.sectionA, "sectionA-container", "A");
+  renderSection(QUIZ_DATA.sectionB, "sectionB-container", "B");
+  document.getElementById("scoreBadge").textContent = "Score: — / 100";
+  document.getElementById("resultBanner").style.display = "none";
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+renderSection(QUIZ_DATA.sectionA, "sectionA-container", "A");
+renderSection(QUIZ_DATA.sectionB, "sectionB-container", "B");
+</script>
+</body>
+</html>
